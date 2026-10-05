@@ -1,17 +1,17 @@
 :root {
   color-scheme: light;
-  --ink: #1b2420;
-  --paper: #efe6d8;
-  --paper-2: #f7f1e7;
-  --line: #d9cebc;
-  --chat: #17211c;
-  --chat-2: #24312a;
-  --outgoing: #d7e4c8;
-  --incoming: #2c3b33;
-  --accent: #1f6a45;
-  --accent-2: #c4552a;
-  --muted: #5e6a62;
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  --ink: #152028;
+  --paper: #f6ead8;
+  --paper-2: #fbf6ee;
+  --line: #d8c4aa;
+  --accent: #0f4c5c;
+  --accent-hover: #0c3d4a;
+  --accent-2: #8a5a12;
+  --muted: #5a6b76;
+  --success: #1f6b4a;
+  --success-soft: #e5f4ec;
+  --incoming: #fffaf3;
+  font-family: "Source Sans 3", "Avenir Next", "Segoe UI", sans-serif;
   color: var(--ink);
   background: var(--paper);
 }
@@ -21,6 +21,21 @@
 body {
   margin: 0;
   min-height: 100vh;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(246, 234, 216, 0.08) 0%,
+      rgba(246, 234, 216, 0.42) 12%,
+      rgba(246, 234, 216, 0.58) 50%,
+      rgba(246, 234, 216, 0.42) 88%,
+      rgba(246, 234, 216, 0.08) 100%
+    ),
+    url("./assets/telephone-background.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 button, textarea { font: inherit; }
@@ -34,9 +49,10 @@ button, textarea { font: inherit; }
 .chat {
   display: flex;
   flex-direction: column;
-  background: var(--chat);
-  color: #f3efe6;
+  background: rgba(246, 234, 216, 0.9);
+  color: var(--ink);
   min-height: 100vh;
+  border-right: 1px solid var(--line);
 }
 
 .chat-head {
@@ -44,7 +60,7 @@ button, textarea { font: inherit; }
   gap: 12px;
   align-items: center;
   padding: 18px 16px 12px;
-  border-bottom: 1px solid #2c3a32;
+  border-bottom: 1px solid var(--line);
 }
 
 .chat-head h1 {
@@ -55,7 +71,7 @@ button, textarea { font: inherit; }
 
 .presence {
   margin: 2px 0 0;
-  color: #c9d5cc;
+  color: var(--muted);
   font-size: 0.82rem;
 }
 
@@ -65,12 +81,13 @@ button, textarea { font: inherit; }
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #315744;
+  background: var(--accent);
+  color: #fff;
   font-weight: 650;
 }
 
-.avatar.on { box-shadow: inset 0 0 0 2px #8fbf7a; }
-.avatar.off { box-shadow: inset 0 0 0 2px #8a7564; }
+.avatar.on { box-shadow: inset 0 0 0 2px var(--success); }
+.avatar.off { box-shadow: inset 0 0 0 2px var(--accent-2); }
 
 .thread {
   flex: 1;
@@ -92,12 +109,13 @@ button, textarea { font: inherit; }
 .bubble.alex {
   align-self: flex-start;
   background: var(--incoming);
+  border: 1px solid var(--line);
 }
 
 .bubble.me {
   align-self: flex-end;
-  background: var(--outgoing);
-  color: #1b2420;
+  background: var(--success-soft);
+  color: var(--ink);
 }
 
 .bubble footer {
@@ -105,7 +123,7 @@ button, textarea { font: inherit; }
   font-size: 0.72rem;
   letter-spacing: 0.02em;
   text-align: right;
-  color: #3d5344;
+  color: var(--success);
 }
 
 .photo {
@@ -129,7 +147,7 @@ button, textarea { font: inherit; }
 
 .composer {
   padding: 12px 14px 16px;
-  border-top: 1px solid #2c3a32;
+  border-top: 1px solid var(--line);
 }
 
 .switch, .clouds, .transport-buttons, .send-col {
@@ -140,16 +158,22 @@ button, textarea { font: inherit; }
 .switch { margin-bottom: 8px; }
 
 .switch button, .clouds button, .transport-buttons button, .send-col button {
-  border: 1px solid transparent;
-  background: #24312a;
-  color: #f3efe6;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
   border-radius: 999px;
   padding: 6px 10px;
   cursor: pointer;
 }
 
-.switch button.selected, .clouds button.selected {
+.switch button.selected, .clouds button.selected, .send-col button[type="submit"] {
   background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.switch button.selected:hover, .clouds button.selected:hover, .send-col button[type="submit"]:hover {
+  background: var(--accent-hover);
 }
 
 .compose-row {
@@ -161,9 +185,9 @@ button, textarea { font: inherit; }
 .composer textarea, .box-label textarea {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid #3a4b41;
-  background: #101712;
-  color: #f3efe6;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  color: var(--ink);
   padding: 10px;
   resize: none;
 }
@@ -177,13 +201,26 @@ button, textarea { font: inherit; }
 
 .hint {
   margin: 8px 0 0;
-  color: #aeb8b0;
+  color: var(--muted);
   font-size: 0.75rem;
 }
 
 .board {
   padding: 20px 22px 32px;
   min-width: 0;
+  background: rgba(246, 234, 216, 0.42);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+  flex: none;
 }
 
 .board-head, .transport {
@@ -203,7 +240,7 @@ button, textarea { font: inherit; }
 
 .board-head h2 {
   margin: 4px 0 0;
-  font-family: Palatino, "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: "Source Serif 4", Palatino, "Iowan Old Style", serif;
   font-size: 1.8rem;
   font-weight: 600;
 }
@@ -236,7 +273,7 @@ button, textarea { font: inherit; }
 
 .doc-head h2 {
   margin: 4px 0 0;
-  font-family: Palatino, "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: "Source Serif 4", Palatino, "Iowan Old Style", serif;
   font-size: 1.6rem;
 }
 
@@ -254,9 +291,9 @@ button, textarea { font: inherit; }
 .doc ul, .history ul { margin: 6px 0 0; padding-left: 1.2rem; }
 
 .doc-head button {
-  border: 1px solid var(--line);
-  background: var(--ink);
-  color: #f7f1e7;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
@@ -296,9 +333,7 @@ button, textarea { font: inherit; }
 .doc-note { color: var(--muted); font-size: 0.85rem; }
 
 .clouds button {
-  background: transparent;
-  color: var(--ink);
-  border-color: var(--line);
+  background: rgba(251, 246, 238, 0.8);
 }
 
 .transport {
@@ -314,7 +349,13 @@ button, textarea { font: inherit; }
 .transport p { margin: 0; font-size: 0.92rem; }
 
 .transport-buttons button {
-  background: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.transport-buttons button:hover:not(:disabled) {
+  background: var(--accent-hover);
 }
 
 .flow-legend, .flow-hint {
@@ -340,7 +381,7 @@ button, textarea { font: inherit; }
 
 .arrow {
   fill: none;
-  stroke: #c9bfb0;
+  stroke: #c4b39a;
   stroke-width: 1.6;
 }
 
@@ -365,10 +406,10 @@ button, textarea { font: inherit; }
 
 .node-shell.open, .node.active .node-shell {
   border-color: var(--accent);
-  background: #f3f7f1;
+  background: #eef5f6;
 }
 
-.node.filled .node-shell { border-color: #8eaa96; }
+.node.filled .node-shell { border-color: #7aa0ab; }
 
 .why {
   display: block;
@@ -446,9 +487,9 @@ button, textarea { font: inherit; }
 }
 
 .detail-tabs button.selected {
-  background: var(--ink);
-  color: #f7f1e7;
-  border-color: var(--ink);
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
 .detail-close { margin-left: auto; }
@@ -480,9 +521,22 @@ button, textarea { font: inherit; }
 .why-body h3 { margin: 0 0 8px; font-size: 1rem; }
 .why-body p { margin: 0 0 8px; font-size: 0.9rem; line-height: 1.45; }
 
+@media (max-width: 640px) {
+  body {
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(246, 234, 216, 0.55) 0%,
+        rgba(236, 220, 196, 0.48) 100%
+      ),
+      url("./assets/telephone-background.jpg");
+    background-attachment: scroll;
+  }
+}
+
 @media (max-width: 1180px) {
   .app { grid-template-columns: 1fr; }
-  .chat { min-height: auto; }
+  .chat { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
   .thread { max-height: 46vh; }
   .board-head, .transport { flex-direction: column; align-items: flex-start; }
 }
