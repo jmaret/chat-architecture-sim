@@ -243,7 +243,9 @@ export default function App() {
 
       <section className="board" aria-label="Architecture">
         <header className="board-head">
-          <div>
+          <div className="brand">
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width="44" height="44" />
+            <div>
             <p className="kicker">Chat simulation</p>
             <h2>How a message moves</h2>
             <p className="doc-links">
@@ -260,6 +262,7 @@ export default function App() {
                 onClick={() => openReading('history')}
               />
             </p>
+            </div>
           </div>
           <div className="clouds" role="group" aria-label="Cloud provider">
             {CLOUDS.map((item) => (

@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.3.1'
+export const APP_VERSION = '1.4.0'
 
 export type Release = {
   version: string
@@ -7,6 +7,14 @@ export type Release = {
 }
 
 export const releases: Release[] = [
+  {
+    version: '1.4.0',
+    date: '2026-10-04',
+    changes: [
+      'Matched the page to the AetherForge palette: cream paper, ink, and teal.',
+      'Added a background of early telephones connected across a room, and a logo of two candlestick phones.',
+    ],
+  },
   {
     version: '1.3.1',
     date: '2026-10-04',

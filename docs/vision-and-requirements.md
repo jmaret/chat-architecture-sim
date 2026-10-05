@@ -1,6 +1,6 @@
 # Vision and requirements
 
-Version 1.3.1 · 2026-10-04
+Version 1.4.0 · 2026-10-04
 
 ## Vision
 
@@ -55,6 +55,7 @@ Out of scope:
 
 ## Version history
 
+- **1.4.0** (2026-10-04). The page uses the AetherForge palette. A background shows early telephones linked by a cord, and the mark is two candlestick phones.
 - **1.3.1** (2026-10-04). Opening the vision summary or the version history pauses the walk. Sending a message closes that panel and returns to the flow.
 - **1.3.0** (2026-10-04). Vision and requirements document. Architecture and design document with conceptual, logical, and physical diagrams. On-page summary and version history. Rule that later changes update the version and both documents.
 - **1.2.0** (2026-10-04). Purpose tab on every component.
