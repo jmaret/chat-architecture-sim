@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CLOUDS, type Cloud } from './simulation/cloud.ts'
 import {
-  components,
-  laneLabel,
-  type ComponentId,
-} from './simulation/components.ts'
-import {
   photoMessage,
   textOffline,
   textOnline,
@@ -13,6 +8,8 @@ import {
   type Scenario,
 } from './simulation/scenarios.ts'
 import { projectWalk } from './simulation/view.ts'
+import { FlowMap, type Inspect } from './FlowMap.tsx'
+import { HistoryPanel, SummaryPanel, VersionLink } from './ProductPanels.tsx'
 
 const STEP_MS = 1100
 
@@ -30,7 +27,8 @@ export default function App() {
   const [scenario, setScenario] = useState<Scenario | null>(null)
   const [stepIndex, setStepIndex] = useState(-1)
   const [playing, setPlaying] = useState(false)
-  const [openWhy, setOpenWhy] = useState<ComponentId | null>(null)
+  const [inspect, setInspect] = useState<Inspect | null>(null)
+  const [reading, setReading] = useState<'summary' | 'history' | null>(null)
   const threadRef = useRef<HTMLDivElement>(null)
   const draftRef = useRef<HTMLTextAreaElement>(null)
   const stepRef = useRef(-1)
@@ -45,14 +43,14 @@ export default function App() {
   const atEnd = scenario !== null && stepIndex >= lastIndex
 
   useEffect(() => {
-    if (!playing || !scenario || atEnd) return
+    if (!playing || !scenario || atEnd || reading) return
     const timer = window.setTimeout(() => {
       const next = Math.min(stepRef.current + 1, lastIndex)
       stepRef.current = next
       setStepIndex(next)
     }, STEP_MS)
     return () => window.clearTimeout(timer)
-  }, [playing, scenario, stepIndex, atEnd, lastIndex])
+  }, [playing, scenario, stepIndex, atEnd, lastIndex, reading])
 
   useEffect(() => {
     if (atEnd) setPlaying(false)
@@ -73,7 +71,7 @@ export default function App() {
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setOpenWhy(null)
+        setInspect(null)
         return
       }
       const target = event.target
@@ -83,6 +81,7 @@ export default function App() {
       ) {
         return
       }
+      if (reading) return
       if (event.key === 'ArrowRight') {
         event.preventDefault()
         step(1)
@@ -108,7 +107,8 @@ export default function App() {
     stepRef.current = 0
     setStepIndex(0)
     setPlaying(false)
-    setOpenWhy(null)
+    setInspect(null)
+    setReading(null)
     setDraft('')
   }
 
@@ -133,14 +133,19 @@ export default function App() {
     stepRef.current = -1
     setStepIndex(-1)
     setPlaying(false)
-    setOpenWhy(null)
+    setInspect(null)
     setDraft('')
     draftRef.current?.focus()
   }
 
-  function toggleWhy(id: ComponentId) {
+  function openReading(next: 'summary' | 'history') {
     setPlaying(false)
-    setOpenWhy((current) => (current === id ? null : id))
+    setReading((current) => (current === next ? null : next))
+  }
+
+  function inspectComponent(next: Inspect | null) {
+    setPlaying(false)
+    setInspect(next)
   }
 
   const hopLabel = scenario
@@ -241,6 +246,20 @@ export default function App() {
           <div>
             <p className="kicker">Chat simulation</p>
             <h2>How a message moves</h2>
+            <p className="doc-links">
+              <button
+                type="button"
+                className={reading === 'summary' ? 'selected' : ''}
+                aria-pressed={reading === 'summary'}
+                onClick={() => openReading('summary')}
+              >
+                Vision and architecture
+              </button>
+              <VersionLink
+                open={reading === 'history'}
+                onClick={() => openReading('history')}
+              />
+            </p>
           </div>
           <div className="clouds" role="group" aria-label="Cloud provider">
             {CLOUDS.map((item) => (
@@ -257,7 +276,13 @@ export default function App() {
           </div>
         </header>
 
-        <div className="transport">
+        {reading === 'summary' ? (
+          <SummaryPanel cloud={cloud} onBack={() => setReading(null)} />
+        ) : reading === 'history' ? (
+          <HistoryPanel onBack={() => setReading(null)} />
+        ) : null}
+
+        <div className="transport" hidden={reading !== null}>
           <p aria-live="polite">{hopLabel}</p>
           <div className="transport-buttons">
             <button type="button" onClick={() => step(-1)} disabled={!scenario || stepIndex <= 0}>
@@ -285,74 +310,17 @@ export default function App() {
           </div>
         </div>
 
-        <div className="cards">
-          {components.map((component) => {
-            const box = view.boxes[component.id]
-            const active = view.activeId === component.id
-            const onPath = scenario?.steps.some((step) => step.componentId === component.id) ?? false
-            const open = openWhy === component.id
-            const placeholder = !scenario
-              ? 'Send a message to fill this box.'
-              : onPath
-                ? 'Waiting for this hop.'
-                : 'Not on this path.'
-            return (
-              <article
-                key={component.id}
-                id={`card-${component.id}`}
-                className={`card ${active ? 'active' : ''} ${box ? 'filled' : ''} ${open ? 'open' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="why"
-                  aria-expanded={open}
-                  aria-controls={`why-${component.id}`}
-                  onClick={() => toggleWhy(component.id)}
-                >
-                  Why this choice
-                </button>
-                {open ? (
-                  <div
-                    className="why-pop"
-                    id={`why-${component.id}`}
-                    role="dialog"
-                    aria-label={`Why ${component.role}`}
-                  >
-                    <h3>{component.role}</h3>
-                    <p>
-                      <strong>Choice. </strong>
-                      {component.choice(cloud)}
-                    </p>
-                    <p>
-                      <strong>Also considered. </strong>
-                      {component.considered}
-                    </p>
-                    <p>
-                      <strong>Why it held. </strong>
-                      {component.why(cloud)}
-                    </p>
-                    <button type="button" onClick={() => setOpenWhy(null)}>
-                      Close
-                    </button>
-                  </div>
-                ) : null}
-                <p className="lane">{laneLabel[component.lane]}</p>
-                <h3>{component.role}</h3>
-                <p className="product">{component.product[cloud]}</p>
-                <label className="box-label">
-                  {box ? (box.kind === 'stored' ? 'Stored' : 'In flight') : 'Idle'}
-                  {box ? ` · ${box.caption}` : ''}
-                  <textarea
-                    readOnly
-                    value={box?.body ?? ''}
-                    placeholder={placeholder}
-                    aria-label={`${component.role} data`}
-                  />
-                </label>
-              </article>
-            )
-          })}
-        </div>
+        {reading === null ? (
+          <FlowMap
+            cloud={cloud}
+            scenario={scenario}
+            stepIndex={stepIndex}
+            boxes={view.boxes}
+            activeId={view.activeId}
+            inspect={inspect}
+            onInspect={inspectComponent}
+          />
+        ) : null}
       </section>
     </div>
   )
