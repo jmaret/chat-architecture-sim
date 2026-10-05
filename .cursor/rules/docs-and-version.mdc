@@ -1,0 +1,16 @@
+---
+description: Bump the app version and update the vision and architecture documents on every change
+alwaysApply: true
+---
+
+# Version and documents
+
+Every change to this project bumps the version and updates the records below. Do this in the same change, not as a follow-up.
+
+1. In `src/product/releases.ts`, set `APP_VERSION` and prepend a release. Use the next patch for a correction, the next minor for a new capability. Each release lists what changed, in sentences a reader of the page can understand.
+2. Set the version line at the top of `docs/vision-and-requirements.md` and `docs/architecture-and-design.md` to that same version.
+3. If goals, scope, or requirements changed, edit the vision document. If structure, walks, diagrams, or decisions changed, edit the architecture document, including the conceptual, logical, or physical diagram that the change affects.
+4. Add the same version and changes under Version history in both documents.
+5. If the on-page summary would be wrong after the change, update `src/product/summary.ts`.
+
+The version shown on the page is `APP_VERSION`. Do not leave the documents on an older version than the app.

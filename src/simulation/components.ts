@@ -21,6 +21,7 @@ export type ComponentDef = {
   role: string
   lane: Lane
   product: Record<Cloud, string>
+  purpose: string
   choice: (cloud: Cloud) => string
   considered: string
   why: (cloud: Cloud) => string
@@ -38,6 +39,8 @@ export const components: ComponentDef[] = [
     role: 'Sender Device',
     lane: 'core',
     product: onDevice,
+    purpose:
+      'This is where the message starts. The phone encrypts the text before anything leaves, keeps a local outbox, and later records the delivery receipt. Plaintext does not travel past this point.',
     choice: () =>
       'Encrypt with the Signal protocol on the phone, and keep the outbox in local SQLite.',
     considered:
@@ -50,6 +53,8 @@ export const components: ComponentDef[] = [
     role: 'User Directory',
     lane: 'core',
     product: product.directory,
+    purpose:
+      'Resolves who the recipient is before the message is encrypted. It maps a phone number to a user id and the identity key the sender needs. After the chat is open, ordinary frames do not come back here.',
     choice: (cloud) => `A relational database: ${product.directory[cloud]}.`,
     considered:
       'Putting profiles in the same wide-column store as offline messages. A document collection with no uniqueness constraints.',
@@ -61,6 +66,8 @@ export const components: ComponentDef[] = [
     role: 'Edge Gateway',
     lane: 'core',
     product: product.gateway,
+    purpose:
+      'The front door for the phone’s long-lived connection. It terminates TLS, accepts the WebSocket, and hands each frame to the chat server that owns that socket. It does not decrypt the message.',
     choice: (cloud) =>
       `${product.gateway[cloud]}, terminating TLS and forwarding WebSocket frames.`,
     considered:
@@ -73,6 +80,8 @@ export const components: ComponentDef[] = [
     role: 'Chat Server A',
     lane: 'core',
     product: product.compute,
+    purpose:
+      'Holds the sender’s open connection. When a frame arrives, it asks where the recipient is connected and whether they are online, then either forwards the ciphertext or parks it for later.',
     choice: (cloud) =>
       `A long-lived process on ${product.compute[cloud]}, owning the sender's socket.`,
     considered:
@@ -85,6 +94,8 @@ export const components: ComponentDef[] = [
     role: 'Session Directory',
     lane: 'core',
     product: product.redis,
+    purpose:
+      'Tells a chat server which machine currently holds someone’s socket. Without it, the sender’s server would not know where to forward the frame.',
     choice: (cloud) =>
       `An in-memory map in ${product.redis[cloud]}: user id to the chat server holding the socket.`,
     considered:
@@ -97,6 +108,8 @@ export const components: ComponentDef[] = [
     role: 'Presence Service',
     lane: 'core',
     product: product.redis,
+    purpose:
+      'Answers whether the recipient is online right now. That answer chooses the branch: deliver straight down their socket, or park the ciphertext and wake the phone.',
     choice: (cloud) =>
       `A second keyspace in ${product.redis[cloud]}, separate from the session map.`,
     considered:
@@ -109,6 +122,8 @@ export const components: ComponentDef[] = [
     role: 'Chat Server B',
     lane: 'core',
     product: product.compute,
+    purpose:
+      'Holds the recipient’s open connection. It writes incoming ciphertext down that socket and, on the way back, relays the delivery receipt. If the recipient is offline, it stays out of the path until the phone reconnects.',
     choice: (cloud) =>
       `A long-lived process on ${product.compute[cloud]}, owning the recipient's socket.`,
     considered:
@@ -121,6 +136,8 @@ export const components: ComponentDef[] = [
     role: 'Transient Message Store',
     lane: 'offline',
     product: product.transient,
+    purpose:
+      'Keeps ciphertext for someone who is not connected. The row lasts only until their phone acknowledges delivery, then it is deleted. Conversation history does not live here.',
     choice: (cloud) =>
       `${product.transient[cloud]}, holding ciphertext only until the phone acknowledges it.`,
     considered:
@@ -138,6 +155,8 @@ export const components: ComponentDef[] = [
     role: 'Push Notification Service',
     lane: 'offline',
     product: product.push,
+    purpose:
+      'Wakes a phone whose connection the operating system has dropped. The notification has no message body. The phone reconnects and pulls the ciphertext from the transient store.',
     choice: (cloud) => `${product.push[cloud]}, with a wake-up and no message body.`,
     considered: 'Requiring the socket to stay open in the background. SMS.',
     why: (cloud) =>
@@ -148,6 +167,8 @@ export const components: ComponentDef[] = [
     role: 'Recipient Device',
     lane: 'core',
     product: onDevice,
+    purpose:
+      'Where the message becomes readable. The phone decrypts it, stores the plaintext locally, and sends a delivery receipt back so the server can drop its copy.',
     choice: () => 'Decrypt on the phone and append the plaintext to local SQLite.',
     considered: 'An inbox the app reloads from the server whenever it opens.',
     why: () =>
@@ -158,6 +179,8 @@ export const components: ComponentDef[] = [
     role: 'Object Store',
     lane: 'media',
     product: product.object,
+    purpose:
+      'Holds the encrypted bytes of a photo or file. Those bytes never travel on the chat socket. The object is ciphertext only; the key goes separately, inside the chat message.',
     choice: (cloud) =>
       `Client ciphertext in ${product.object[cloud]}. The decryption key is not in the object.`,
     considered:
@@ -170,6 +193,8 @@ export const components: ComponentDef[] = [
     role: 'Media CDN',
     lane: 'media',
     product: product.cdn,
+    purpose:
+      'Caches that ciphertext near the recipient so a download does not hit the origin every time. It still does not hold the decryption key.',
     choice: (cloud) => `${product.cdn[cloud]}, caching the ciphertext object.`,
     considered: 'Every download read from the origin bucket. No cache.',
     why: (cloud) =>
