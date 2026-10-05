@@ -1,0 +1,333 @@
+:root {
+  color-scheme: light;
+  --ink: #1b2420;
+  --paper: #efe6d8;
+  --paper-2: #f7f1e7;
+  --line: #d9cebc;
+  --chat: #17211c;
+  --chat-2: #24312a;
+  --outgoing: #d7e4c8;
+  --incoming: #2c3b33;
+  --accent: #1f6a45;
+  --accent-2: #c4552a;
+  --muted: #5e6a62;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button, textarea { font: inherit; }
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  min-height: 100vh;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  background: var(--chat);
+  color: #f3efe6;
+  min-height: 100vh;
+}
+
+.chat-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 16px 12px;
+  border-bottom: 1px solid #2c3a32;
+}
+
+.chat-head h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.presence {
+  margin: 2px 0 0;
+  color: #c9d5cc;
+  font-size: 0.82rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #315744;
+  font-weight: 650;
+}
+
+.avatar.on { box-shadow: inset 0 0 0 2px #8fbf7a; }
+.avatar.off { box-shadow: inset 0 0 0 2px #8a7564; }
+
+.thread {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 10px 12px 8px;
+  border-radius: 14px;
+}
+
+.bubble p { margin: 0; line-height: 1.4; }
+
+.bubble.alex {
+  align-self: flex-start;
+  background: var(--incoming);
+}
+
+.bubble.me {
+  align-self: flex-end;
+  background: var(--outgoing);
+  color: #1b2420;
+}
+
+.bubble footer {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-align: right;
+  color: #3d5344;
+}
+
+.photo {
+  width: 168px;
+  height: 112px;
+  border-radius: 8px;
+  background:
+    linear-gradient(160deg, transparent 40%, rgba(27, 36, 32, 0.18) 40% 42%, transparent 42%),
+    #c9b89a;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8px;
+}
+
+.photo span {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.composer {
+  padding: 12px 14px 16px;
+  border-top: 1px solid #2c3a32;
+}
+
+.switch, .clouds, .transport-buttons, .send-col {
+  display: flex;
+  gap: 6px;
+}
+
+.switch { margin-bottom: 8px; }
+
+.switch button, .clouds button, .transport-buttons button, .send-col button, .why, .why-pop button {
+  border: 1px solid transparent;
+  background: #24312a;
+  color: #f3efe6;
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.switch button.selected, .clouds button.selected {
+  background: var(--accent);
+}
+
+.compose-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.composer textarea, .box-label textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #3a4b41;
+  background: #101712;
+  color: #f3efe6;
+  padding: 10px;
+  resize: none;
+}
+
+.send-col { flex-direction: column; }
+.send-col button { flex: 1; white-space: nowrap; }
+.send-col button:disabled, .transport-buttons button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 8px 0 0;
+  color: #aeb8b0;
+  font-size: 0.75rem;
+}
+
+.board {
+  padding: 20px 22px 32px;
+  min-width: 0;
+}
+
+.board-head, .transport {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.kicker {
+  margin: 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--accent-2);
+}
+
+.board-head h2 {
+  margin: 4px 0 0;
+  font-family: Palatino, "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.clouds button {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.transport {
+  margin: 16px 0;
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.transport p { margin: 0; font-size: 0.92rem; }
+
+.transport-buttons button {
+  background: var(--ink);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 14px;
+  align-items: start;
+}
+
+.card {
+  position: relative;
+  margin-top: 12px;
+  padding: 18px 12px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.card.active {
+  border-color: var(--accent);
+  background: #f3f7f1;
+}
+
+.card.open { z-index: 4; }
+
+.why {
+  position: absolute;
+  top: -12px;
+  right: 12px;
+  background: var(--accent-2);
+  color: #fffaf4;
+  font-size: 0.75rem;
+  padding: 4px 9px;
+}
+
+.lane {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card h3 {
+  margin: 4px 0 0;
+  font-size: 1.02rem;
+}
+
+.product {
+  margin: 2px 0 8px;
+  color: var(--accent);
+  font-size: 0.84rem;
+  min-height: 2.4em;
+}
+
+.box-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.box-label textarea {
+  margin-top: 6px;
+  min-height: 148px;
+  background: #fffdf9;
+  color: var(--ink);
+  border-color: var(--line);
+  font-family: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.why-pop {
+  position: absolute;
+  z-index: 5;
+  top: 18px;
+  left: 10px;
+  right: 10px;
+  max-height: 280px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 12px;
+  background: #1b2420;
+  color: #f6f1e8;
+}
+
+.why-pop h3 { margin: 0 0 8px; font-size: 0.95rem; }
+.why-pop p { margin: 0 0 8px; font-size: 0.82rem; line-height: 1.45; }
+.why-pop button { background: transparent; border-color: #8d9a90; font-size: 0.75rem; }
+
+@media (max-width: 980px) {
+  .app { grid-template-columns: 1fr; }
+  .chat { min-height: auto; }
+  .thread { max-height: 46vh; }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .board-head, .transport { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .cards { grid-template-columns: 1fr; }
+}
