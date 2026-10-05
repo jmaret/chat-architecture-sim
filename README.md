@@ -14,6 +14,6 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173/chat-architecture-sim/
+Open http://localhost:5173/
 
-The hosted copy is a GitHub Pages site from this repository.
+The hosted copy is https://chat-architecture-sim.aathira-services.com, a GitHub Pages site from this repository, served from the domain root.

@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.4.0'
+export const APP_VERSION = '1.4.1'
 
 export type Release = {
   version: string
@@ -7,6 +7,13 @@ export type Release = {
 }
 
 export const releases: Release[] = [
+  {
+    version: '1.4.1',
+    date: '2026-10-05',
+    changes: [
+      'The hosted page loads its script and stylesheet from the site root, so the custom domain opens the app.',
+    ],
+  },
   {
     version: '1.4.0',
     date: '2026-10-04',
