@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.3.0'
+export const APP_VERSION = '1.3.1'
 
 export type Release = {
   version: string
@@ -7,6 +7,14 @@ export type Release = {
 }
 
 export const releases: Release[] = [
+  {
+    version: '1.3.1',
+    date: '2026-10-04',
+    changes: [
+      'Opening the vision summary or the version history pauses the walk.',
+      'Sending a message closes that panel and shows the flow again.',
+    ],
+  },
   {
     version: '1.3.0',
     date: '2026-10-04',

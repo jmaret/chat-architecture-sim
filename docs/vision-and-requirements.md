@@ -1,6 +1,6 @@
 # Vision and requirements
 
-Version 1.3.0 · 2026-10-04
+Version 1.3.1 · 2026-10-04
 
 ## Vision
 
@@ -44,7 +44,7 @@ Out of scope:
 4. The architecture is a flow of symbols and arrows. A pair that exchanges data in both directions has two arrows.
 5. Clicking a symbol opens a panel with three tabs: Data (the payload or stored record for the current walk), Purpose (the component’s job), and Why this choice (alternatives and the reason this design held).
 6. Switching AWS, Azure, or Google changes the product name and the resource names in stored records, and does not reset the hop.
-7. The page links to a short vision and architecture summary, and shows the version history with the changes in every version.
+7. The page links to a short vision and architecture summary, and shows the version history with the changes in every version. Opening either panel pauses the walk. Sending a message closes the panel and shows the flow again.
 8. The displayed version matches `APP_VERSION` in `src/product/releases.ts`.
 
 ## Non-functional requirements
@@ -55,6 +55,7 @@ Out of scope:
 
 ## Version history
 
+- **1.3.1** (2026-10-04). Opening the vision summary or the version history pauses the walk. Sending a message closes that panel and returns to the flow.
 - **1.3.0** (2026-10-04). Vision and requirements document. Architecture and design document with conceptual, logical, and physical diagrams. On-page summary and version history. Rule that later changes update the version and both documents.
 - **1.2.0** (2026-10-04). Purpose tab on every component.
 - **1.1.0** (2026-10-04). Flow of symbols and arrows. Two arrows for two-way traffic. Data and Why this choice open on click.

@@ -1,6 +1,6 @@
 # Architecture and design
 
-Version 1.3.0 · 2026-10-04
+Version 1.3.1 · 2026-10-04
 
 This document describes the messaging system the simulation teaches, and how the page itself is built. The running page is not that messaging system. It replays scripted hops in the browser.
 
@@ -128,7 +128,7 @@ The diagram above is the AWS shape. Azure and Google use the same boxes:
 
 ## Simulation design
 
-The page is a Vite React app. `src/simulation/scenarios.ts` is an ordered list of hops. `projectWalk` rebuilds chat state and the payload text boxes from the hops up to the current index, so step back is exact. `src/simulation/flow.ts` places the symbols and decides which arrow a hop lights. Cloud choice only changes product names and resource strings inside payloads.
+The page is a Vite React app. `src/simulation/scenarios.ts` is an ordered list of hops. `projectWalk` rebuilds chat state and the payload text boxes from the hops up to the current index, so step back is exact. `src/simulation/flow.ts` places the symbols and decides which arrow a hop lights. Cloud choice only changes product names and resource strings inside payloads. Opening the vision summary or the version history pauses playback and hides the flow. Sending a message closes that panel and shows the flow again.
 
 Payloads are illustrative JSON. There is no socket, database, or object store.
 
@@ -142,6 +142,7 @@ Payloads are illustrative JSON. There is no socket, database, or object store.
 
 ## Version history
 
+- **1.3.1** (2026-10-04). The summary and version-history panels pause the walk. A new send closes the panel and returns to the flow.
 - **1.3.0** (2026-10-04). This document, including the conceptual, logical, and physical diagrams. On-page summary and version history.
 - **1.2.0** (2026-10-04). Purpose added as a third reading of each component, beside the payload and the tradeoff.
 - **1.1.0** (2026-10-04). Logical flow drawn as symbols and arrows. Two arrows where the logical exchange is both ways. Data and Why this choice open on click.

@@ -43,14 +43,14 @@ export default function App() {
   const atEnd = scenario !== null && stepIndex >= lastIndex
 
   useEffect(() => {
-    if (!playing || !scenario || atEnd) return
+    if (!playing || !scenario || atEnd || reading) return
     const timer = window.setTimeout(() => {
       const next = Math.min(stepRef.current + 1, lastIndex)
       stepRef.current = next
       setStepIndex(next)
     }, STEP_MS)
     return () => window.clearTimeout(timer)
-  }, [playing, scenario, stepIndex, atEnd, lastIndex])
+  }, [playing, scenario, stepIndex, atEnd, lastIndex, reading])
 
   useEffect(() => {
     if (atEnd) setPlaying(false)
@@ -81,6 +81,7 @@ export default function App() {
       ) {
         return
       }
+      if (reading) return
       if (event.key === 'ArrowRight') {
         event.preventDefault()
         step(1)
@@ -107,6 +108,7 @@ export default function App() {
     setStepIndex(0)
     setPlaying(false)
     setInspect(null)
+    setReading(null)
     setDraft('')
   }
 
@@ -134,6 +136,11 @@ export default function App() {
     setInspect(null)
     setDraft('')
     draftRef.current?.focus()
+  }
+
+  function openReading(next: 'summary' | 'history') {
+    setPlaying(false)
+    setReading((current) => (current === next ? null : next))
   }
 
   function inspectComponent(next: Inspect | null) {
@@ -244,13 +251,13 @@ export default function App() {
                 type="button"
                 className={reading === 'summary' ? 'selected' : ''}
                 aria-pressed={reading === 'summary'}
-                onClick={() => setReading((current) => (current === 'summary' ? null : 'summary'))}
+                onClick={() => openReading('summary')}
               >
                 Vision and architecture
               </button>
               <VersionLink
                 open={reading === 'history'}
-                onClick={() => setReading((current) => (current === 'history' ? null : 'history'))}
+                onClick={() => openReading('history')}
               />
             </p>
           </div>

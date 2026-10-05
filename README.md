@@ -1,6 +1,6 @@
 # Chat
 
-Version 1.3.0. A static simulation of a 1:1 messaging path. Type in the chat pane and walk a message through the architecture one hop at a time. Pause on any hop to read the in-flight payload or the stored record. Each component has its purpose and a short note on the alternatives that were set aside.
+Version 1.3.1. A static simulation of a 1:1 messaging path. Type in the chat pane and walk a message through the architecture one hop at a time. Pause on any hop to read the in-flight payload or the stored record. Each component has its purpose and a short note on the alternatives that were set aside.
 
 - [Vision and requirements](docs/vision-and-requirements.md)
 - [Architecture and design](docs/architecture-and-design.md)
